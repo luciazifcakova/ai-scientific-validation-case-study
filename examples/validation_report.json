@@ -1,0 +1,28 @@
+{
+  "analysis_id": "demo-001",
+  "status": "REJECT",
+  "checks": [
+    {
+      "stage": "schema",
+      "status": "PASS"
+    },
+    {
+      "stage": "dependencies",
+      "status": "PASS"
+    },
+    {
+      "stage": "security",
+      "status": "PASS"
+    },
+    {
+      "stage": "execution",
+      "status": "PASS"
+    },
+    {
+      "stage": "output_validation",
+      "status": "FAIL",
+      "reason": "Expected column 'condition' was not present in summary.csv"
+    }
+  ],
+  "decision": "Do not propagate this output downstream."
+}
