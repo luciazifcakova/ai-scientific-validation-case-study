@@ -1,0 +1,40 @@
+#execution
+process = subprocess.run(
+    list(command),
+    cwd=workspace,
+    capture_output=True,
+    text=True,
+    timeout=request.timeout_seconds,
+    env=environment,
+    check=False,
+)
+
+exit_code = process.returncode
+stdout = process.stdout
+stderr = process.stderr
+
+#validation
+found = []
+missing = []
+
+for expected in request.expected_outputs:
+    expected_path = Path(expected)
+
+    if expected_path.is_absolute() or ".." in expected_path.parts:
+        raise ValueError(
+            f"Unsafe expected output path: {expected}"
+        )
+
+    if (workspace / expected_path).is_file():
+        found.append(expected_path.as_posix())
+    else:
+        missing.append(expected_path.as_posix())
+
+#success criteria
+@property
+def succeeded(self) -> bool:
+    return (
+        self.exit_code == 0
+        and not self.timed_out
+        and not self.expected_outputs_missing
+    )
